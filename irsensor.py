@@ -4,7 +4,7 @@ import time
 st1 = st2 = st3 = st4 = st5 = st6 = st7 = st8 = False
 
 sensor = [4, 17, 27, 22, 5, 6, 13, 19]
-GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BCM)
 
 for i in sensor:
     GPIO.setup(i, GPIO.IN)

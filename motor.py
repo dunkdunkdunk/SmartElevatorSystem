@@ -2,6 +2,7 @@ import RPi.GPIO as GPIO
 import time
 
 motor = [x, y]
+enApin = z
 GPIO.setmode(GPIO.BCM)
 
 for i in motor:
@@ -9,14 +10,18 @@ for i in motor:
 
 in1 = x
 in2 = y
+enA = GPIO.PWM(enApin, 100)
+enA.start(0)
 
 
 def forward():
+    enA.ChangeDutyCycle(20)
     GPIO.output(in1, True)
     GPIO.output(in2, False)
 
 
 def backward():
+    enA.ChangeDutyCycle(20)
     GPIO.output(in1, False)
     GPIO.output(in2, True)
 
