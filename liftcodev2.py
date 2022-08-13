@@ -184,6 +184,29 @@ def liftcode():
     except KeyboardInterrupt:
         GPIO.cleanup()
 
+def sendData(data):
+
+    REST_API_URL = 'https://api.powerbi.com/beta/a6901d0c-e6ce-4ac7-93d5-6d406d25285f/datasets/6a482462-7fa4-4a5f-9835-55cd7acf4a62/rows?key=xrSUTFI%2Bs%2F2v4Wwbg35SW7sW9%2F24tr55nS1qsy8bh2urdhlpsGxi%2BFaHlSGoDxK4c%2Br3AJyDG4jO3XPy%2BiJHag%3D%3D'
+
+    # while True:
+    data_raw = []
+    for i in range(1):
+        row = [data[0], data[1], data[2]]
+        data_raw.append(row)
+        print("Raw data - ", data_raw)
+
+    # set the header record
+    HEADER = ["date", "time", "numFace"]
+
+    data_df = pd.DataFrame(data_raw, columns=HEADER)
+    data_json = bytes(data_df.to_json(orient='records'), encoding='utf-8')
+    print("JSON dataset", data_json)
+
+    # Post the data on the Power BI API
+    req = requests.post(REST_API_URL, data_json)
+
+    print("Data posted in Power BI API")
+
 
 if __name__ == '__main__':
 
