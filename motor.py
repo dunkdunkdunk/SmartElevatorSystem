@@ -1,15 +1,15 @@
 import RPi.GPIO as GPIO
 import time
 
-motor = [x, y]
-enApin = z
+motor = [20, 21]
+enApin = 16
 GPIO.setmode(GPIO.BCM)
 
 for i in motor:
     GPIO.setup(i, GPIO.OUT)
-
-in1 = x
-in2 = y
+GPIO.setup(enApin,GPIO.OUT)
+in1 = 20
+in2 = 21
 enA = GPIO.PWM(enApin, 100)
 enA.start(0)
 

@@ -61,7 +61,7 @@ try:
                     break
             time.sleep(0.5)
         elif GPIO.input(sensor[7]) == 0:
-            st8 = not s
+            st8 = not st8
             print("Object8 Detected")
             while GPIO.input(sensor[7]) == 0:
                 if GPIO.input(sensor[7]) == 1:
