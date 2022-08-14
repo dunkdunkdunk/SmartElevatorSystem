@@ -17,14 +17,31 @@ import RPi.GPIO as GPIO
 def cameraProcess1(data1):
     #send frame into cameraProcess2 function & timer function
     GPIO.setmode(GPIO.BCM)
-    GPIO.output(x)
+    x =
+    y =
+    GPIO.setup(x,GPIO.IN)
+    GPIO.setup(y,GPIO.IN)
+
+    hx = HX711(dout_pin=x, pd_sck_pin=y)
+    hx.set_reading_format("MSB","MSB")
+    hx.set_reference_unit(referenceUnit)
+    hx.reset()
+    hx.tare()
+    print("Tare Done!")
     cap = cv2.VideoCapture(0)
 
     starttime = datetime.now()
 
     while cap.read():
+
+        val = hx.get_weight(x)
+        print(round(val),"Grams")
+
+        hx.power_down()
+        hx.power_up()
+
         img, available, date, mytime, finishtime = cameraProcess2(
-             cap, starttime,HX711(dout_pin=x, pd_sck_pin=y))
+             cap, starttime,val)
         if available >= 0:
             starttime = finishtime
             cv2.imshow('Result', img)
@@ -61,7 +78,6 @@ def cameraProcess2(cap, start,hx):
     blur = cv2.GaussianBlur(imS, ((15, 15)), 0)
     hsv = cv2.cvtColor(blur, cv2.COLOR_BGR2HSV)
 
-    usedarea = 0
     numuser = 0
 
     lower_blue = np.array([38, 10, 10])
@@ -73,16 +89,21 @@ def cameraProcess2(cap, start,hx):
     contours2, _ = cv2.findContours(
         maskblue, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
 
-    # entry line
     unusedarea = 0
     for con in contours2:
         area = cv2.contourArea(con)
         unusedarea += area
-    print(unusedarea)
-    if unusedarea < 40000:
+    
+    currentWeight = hx
+    if unusedarea < __ and hx > __ :
         available = 0
-    else:
-        available = unusedarea // 40000
+    elif unusedarea >= __ and hx > __ :
+        available = 0
+    elif unusedarea >= __ and hx <= __ : 
+        available = unusedarea // __
+    elif unusedarea < __ and hx <= __ :
+        available = 0
+        
     # display current number of user
     cv2.putText(imS, "Space left for: "+str(available), (50, 50),
                 cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 1)
@@ -123,9 +144,9 @@ if __name__ == '__main__':
 
     camProcess = Process(target=cameraProcess1, args=(data2,))
     camProcess.start()
-    while True:
-        dataVal = data1.recv()
+    # while True:
+    #     dataVal = data1.recv()
 
-        pbiProcess = Process(target=sendData, args=(dataVal,))
-        pbiProcess.start()
-        pbiProcess.join()
+    #     pbiProcess = Process(target=sendData, args=(dataVal,))
+    #     pbiProcess.start()
+    #     pbiProcess.join()

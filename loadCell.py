@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO                # import GPIO
 from hx711 import HX711                # import the class HX711
 
-GPIO.setmode(GPIO.BCM)                 # set GPIO pin mode to BCM numbering
+GPIO.setmode(GPIO.BCM)
 x =
 y =
 GPIO.setup(x,GPIO.IN)
