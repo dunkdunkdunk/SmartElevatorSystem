@@ -1,7 +1,9 @@
 import RPi.GPIO as GPIO
 import time
+from datetime import datetime
 import multiprocessing
-
+import pandas as pd
+import requests
 
 def forward(speed, in1, in2, enA):
     enA.ChangeDutyCycle(speed)
@@ -20,7 +22,7 @@ def stop(in1, in2):
     GPIO.output(in2, True)
 
 
-def liftcode():
+def liftcode(data1):
     st1 = st2 = st3 = st4 = st5 = st6 = st7 = st8 = False
     sensor = [4, 17, 27, 22, 5, 6, 13, 19]
     motor = [20,21]
@@ -160,19 +162,24 @@ def liftcode():
                 if currentFloor < destination:
                     currentFloor += 1
                     print("Current Floor",currentFloor)
+                    data1.send(currentFloor)
                     print("Passed")
                     if currentFloor == destination:
+                        data1.send(currentFloor)
                         print("Door Opened")
                         stop(in1, in2)
                     time.sleep(1)
                 elif currentFloor == destination:
+                    data1.send(currentFloor)
                     print("Door Opened")
                     stop(in1, in2)
                 elif currentFloor > destination:
                     currentFloor -= 1
                     print("Current Floor",currentFloor)
+                    data1.send(currentFloor)
                     print("Passed")
                     if currentFloor == destination:
+                        data1.send(currentFloor)
                         print("Door Opened")
                         stop(in1, in2)
                     time.sleep(1)
@@ -186,17 +193,17 @@ def liftcode():
 
 def sendData(data):
 
-    REST_API_URL = 'https://api.powerbi.com/beta/a6901d0c-e6ce-4ac7-93d5-6d406d25285f/datasets/6a482462-7fa4-4a5f-9835-55cd7acf4a62/rows?key=xrSUTFI%2Bs%2F2v4Wwbg35SW7sW9%2F24tr55nS1qsy8bh2urdhlpsGxi%2BFaHlSGoDxK4c%2Br3AJyDG4jO3XPy%2BiJHag%3D%3D'
+    REST_API_URL = 'https://api.powerbi.com/beta/a6901d0c-e6ce-4ac7-93d5-6d406d25285f/datasets/96fa3ba6-b8a0-43cf-8855-8043505c3019/rows?key=NrhanNwnoNtsfpARoY1bbg2nllJUQq8Ako%2FXGPnJlIy9Zt43EFlrqC9wm%2BmyVqpWz5wyd%2F87AvAzYni3HNyD1Q%3D%3D'
 
     # while True:
     data_raw = []
     for i in range(1):
-        row = [data[0], data[1], data[2]]
+        row = [data,datetime.today().strftime("%Y-%m-%d"),datetime.now().isoformat()]
         data_raw.append(row)
         print("Raw data - ", data_raw)
 
     # set the header record
-    HEADER = ["date", "time", "numFace"]
+    HEADER = ["floor","time","date"]
 
     data_df = pd.DataFrame(data_raw, columns=HEADER)
     data_json = bytes(data_df.to_json(orient='records'), encoding='utf-8')
@@ -209,6 +216,13 @@ def sendData(data):
 
 
 if __name__ == '__main__':
+    data1, data2 = multiprocessing.Pipe()
 
-    elevatorProcess = multiprocessing.Process(target=liftcode, args=())
+    elevatorProcess = multiprocessing.Process(target=liftcode, args=(data2,))
     elevatorProcess.start()
+    while True:
+        dataVal = data1.recv()
+
+        pbiProcess = multiprocessing.Process(target=sendData, args=(dataVal,))
+        pbiProcess.start()
+        pbiProcess.join()

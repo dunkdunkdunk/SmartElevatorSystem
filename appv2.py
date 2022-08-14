@@ -11,37 +11,34 @@ import pandas as pd
 from datetime import datetime, timedelta
 import requests
 import time
-import random
 
 
 def cameraProcess1(data1):
-    classifier = cv2.CascadeClassifier(
-        '../Dataset/haarcascade_frontalface_default.xml')
-    cap = cv2.VideoCapture('humanface.mp4')
+    cap = cv2.VideoCapture(0)
 
     starttime = datetime.now()
 
     while cap.read():
-        img, numFace, date, mytime, finishtime = cameraProcess2(
-            classifier, cap, starttime)
-        if numFace >= 0:
+        img, available, date, mytime, finishtime = cameraProcess2(
+             cap, starttime)
+        if available >= 0:
             starttime = finishtime
             cv2.imshow('Result', img)
-            data1.send([date, mytime, numFace])
+            data1.send([date, mytime, available])
 
-            if cv2.waitKey(30) & 0xFF == ord('q'):
+            if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
         else:
             cv2.imshow('Result', img)
 
-            if cv2.waitKey(30) & 0xFF == ord('q'):
+            if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
     cap.release()
     cv2.destroyAllWindows()
 
 
-def cameraProcess2(classifier, cap, start):
+def cameraProcess2( cap, start):
     ret, frame = cap.read()
     imS = cv2.resize(frame, (640, 480))
 
@@ -62,8 +59,8 @@ def cameraProcess2(classifier, cap, start):
     usedarea = 0
     numuser = 0
 
-    lower_blue = np.array([75, 10, 10])
-    upper_blue = np.array([130, 255, 255])
+    lower_blue = np.array([38, 10, 10])
+    upper_blue = np.array([75, 255, 255])
 
     maskblue = cv2.inRange(hsv, lower_blue, upper_blue)
 
@@ -104,7 +101,7 @@ def sendData(data):
         print("Raw data - ", data_raw)
 
     # set the header record
-    HEADER = ["date", "time", "numFace"]
+    HEADER = ["date", "time", "available"]
 
     data_df = pd.DataFrame(data_raw, columns=HEADER)
     data_json = bytes(data_df.to_json(orient='records'), encoding='utf-8')
