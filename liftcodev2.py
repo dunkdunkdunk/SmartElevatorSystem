@@ -1,3 +1,4 @@
+#import dependencies
 import RPi.GPIO as GPIO
 import time
 from datetime import datetime
@@ -5,36 +6,40 @@ import multiprocessing
 import pandas as pd
 import requests
 
+#forward motor function
 def forward(speed, in1, in2, enA):
     enA.ChangeDutyCycle(speed)
     GPIO.output(in1, True)
     GPIO.output(in2, False)
 
-
+#backward motor function
 def backward(speed, in1, in2, enA):
     enA.ChangeDutyCycle(speed)
     GPIO.output(in1, False)
     GPIO.output(in2, True)
 
-
+#stop motor function
 def stop(in1, in2):
     GPIO.output(in1, True)
     GPIO.output(in2, True)
 
-
 def liftcode(data1):
+    #define each state for each IR sensor
     st1 = st2 = st3 = st4 = st5 = st6 = st7 = st8 = False
+    #IR sensor GPIO PIN
     sensor = [4, 17, 27, 22, 5, 6, 13, 19]
-    motor = [20,21]
+    #motor & enA GPIO PIN 
+    in1 = 20
+    in2 = 21
+    motor = [in1,in2]
     enApin = 16
+    #speed for motor
     speed = 30
+    #setmode as BCM
     GPIO.setmode(GPIO.BCM)
-
     for i in motor:
         GPIO.setup(i, GPIO.OUT)
     GPIO.setup(enApin,GPIO.OUT)
-    in1 = 20
-    in2 = 21
     enA = GPIO.PWM(enApin, 50)
     enA.start(0)
     for i in sensor:

@@ -11,17 +11,20 @@ import pandas as pd
 from datetime import datetime, timedelta
 import requests
 import time
-
+from hx711 import HX711  
+import RPi.GPIO as GPIO
 
 def cameraProcess1(data1):
     #send frame into cameraProcess2 function & timer function
+    GPIO.setmode(GPIO.BCM)
+    GPIO.output(x)
     cap = cv2.VideoCapture(0)
 
     starttime = datetime.now()
 
     while cap.read():
         img, available, date, mytime, finishtime = cameraProcess2(
-             cap, starttime)
+             cap, starttime,HX711(dout_pin=x, pd_sck_pin=y))
         if available >= 0:
             starttime = finishtime
             cv2.imshow('Result', img)
@@ -39,7 +42,7 @@ def cameraProcess1(data1):
     cv2.destroyAllWindows()
 
 
-def cameraProcess2(cap, start):
+def cameraProcess2(cap, start,hx):
     #compute as a main program
     ret, frame = cap.read()
     imS = cv2.resize(frame, (640, 480))
