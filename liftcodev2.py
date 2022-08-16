@@ -23,17 +23,23 @@ def stop(in1, in2):
     GPIO.output(in1, True)
     GPIO.output(in2, True)
 
-def openliftdoor(in3,in4) :
+def openliftdoor(in3,in4,in5,in6) :
     GPIO.output(in3,True)
     GPIO.output(in4,False)
+    GPIO.output(in5, False)
+    GPIO.output(in6, True)
 
-def closeliftdoor(in3,in4):
+def closeliftdoor(in3,in4,in5,in6):
     GPIO.output(in3, False)
     GPIO.output(in4, True)
+    GPIO.output(in5,True)
+    GPIO.output(in6,False)
 
-def stopliftdoor(in3,in4):
-    GPIO.output(in3,True)
-    GPIO.output(in4,True)
+def stopliftdoor(in3,in4,in5,in6):
+    GPIO.output(in3,False)
+    GPIO.output(in4,False)
+    GPIO.output(in5,False)
+    GPIO.output(in6,False)
 
 def liftcode(data1):
     #define each state for each IR sensor
@@ -45,10 +51,12 @@ def liftcode(data1):
     in2 = 21
     in3 = 23
     in4 = 24
-    motor = [in1,in2,in3,in4]
+    in5 = 14
+    in6 = 15
+    motor = [in1,in2,in3,in4,in5,in6]
     enApin = 16
     #speed for motor
-    speed = 30
+    speed = 100
     #setmode as BCM
     GPIO.setmode(GPIO.BCM)
 
@@ -83,13 +91,13 @@ def liftcode(data1):
                     if doorIsOpened :
                         print("==== Arrived ====")
                         time.sleep(1)
-                        openliftdoor(in3,in4)
+                        openliftdoor(in3,in4,in5,in6)
                         time.sleep(1)
-                        stopliftdoor(in3,in4)
+                        stopliftdoor(in3,in4,in5,in6)
                         time.sleep(2)
-                        closeliftdoor(in3,in4)
+                        closeliftdoor(in3,in4,in5,in6)
                         time.sleep(1)
-                        stopliftdoor(in3,in4)
+                        stopliftdoor(in3,in4,in5,in6)
                         print("==== Door Opened ====")
                 while GPIO.input(sensor[0]) == 0:
                     if GPIO.input(sensor[0]) == 1:
@@ -107,13 +115,13 @@ def liftcode(data1):
                     if doorIsOpened :
                         print("==== Arrived ====")
                         time.sleep(1)
-                        openliftdoor(in3,in4)
+                        openliftdoor(in3,in4,in5,in6)
                         time.sleep(1)
-                        stopliftdoor(in3,in4)
+                        stopliftdoor(in3,in4,in5,in6)
                         time.sleep(2)
-                        closeliftdoor(in3,in4)
+                        closeliftdoor(in3,in4,in5,in6)
                         time.sleep(1)
-                        stopliftdoor(in3,in4)
+                        stopliftdoor(in3,in4,in5,in6)
                         print("==== Door Opened ====")
                 elif currentFloor > destination:
                     print("==== Going down to 2nd floor ====")
@@ -131,13 +139,13 @@ def liftcode(data1):
                     if doorIsOpened :
                         print("==== Arrived ====")
                         time.sleep(1)
-                        openliftdoor(in3,in4)
+                        openliftdoor(in3,in4,in5,in6)
                         time.sleep(1)
-                        stopliftdoor(in3,in4)
+                        stopliftdoor(in3,in4,in5,in6)
                         time.sleep(2)
-                        closeliftdoor(in3,in4)
+                        closeliftdoor(in3,in4,in5,in6)
                         time.sleep(1)
-                        stopliftdoor(in3,in4)
+                        stopliftdoor(in3,in4,in5,in6)
                         print("==== Door Opened ====")
                 elif currentFloor < destination:
                     print("==== Going up to 3rd floor ====")
@@ -159,13 +167,13 @@ def liftcode(data1):
                     if doorIsOpened :
                         print("==== Arrived ====")
                         time.sleep(1)
-                        openliftdoor(in3,in4)
+                        openliftdoor(in3,in4,in5,in6)
                         time.sleep(1)
-                        stopliftdoor(in3,in4)
+                        stopliftdoor(in3,in4,in5,in6)
                         time.sleep(2)
-                        closeliftdoor(in3,in4)
+                        closeliftdoor(in3,in4,in5,in6)
                         time.sleep(1)
-                        stopliftdoor(in3,in4)
+                        stopliftdoor(in3,in4,in5,in6)
                         print("==== Door Opened ====")
                 while GPIO.input(sensor[3]) == 0:
                     if GPIO.input(sensor[3]) == 1:
@@ -183,13 +191,13 @@ def liftcode(data1):
                     if doorIsOpened :
                         print("==== Arrived ====")
                         time.sleep(1)
-                        openliftdoor(in3,in4)
+                        openliftdoor(in3,in4,in5,in6)
                         time.sleep(1)
-                        stopliftdoor(in3,in4)
+                        stopliftdoor(in3,in4,in5,in6)
                         time.sleep(2)
-                        closeliftdoor(in3,in4)
+                        closeliftdoor(in3,in4,in5,in6)
                         time.sleep(1)
-                        stopliftdoor(in3,in4)
+                        stopliftdoor(in3,in4,in5,in6)
                         print("==== Door Opened ====")
                 elif currentFloor > destination:
                     print("==== Going down to 2nd floor ====")
@@ -210,13 +218,13 @@ def liftcode(data1):
                     if doorIsOpened :
                         print("==== Arrived ====")
                         time.sleep(1)
-                        openliftdoor(in3,in4)
+                        openliftdoor(in3,in4,in5,in6)
                         time.sleep(1)
-                        stopliftdoor(in3,in4)
+                        stopliftdoor(in3,in4,in5,in6)
                         time.sleep(2)
-                        closeliftdoor(in3,in4)
+                        closeliftdoor(in3,in4,in5,in6)
                         time.sleep(1)
-                        stopliftdoor(in3,in4)
+                        stopliftdoor(in3,in4,in5,in6)
                         print("==== Door Opened ====")
                 elif currentFloor > destination:
                     print("==== Going down to 2nd floor ====")
@@ -234,13 +242,13 @@ def liftcode(data1):
                     if doorIsOpened :
                         print("==== Arrived ====")
                         time.sleep(1)
-                        openliftdoor(in3,in4)
+                        openliftdoor(in3,in4,in5,in6)
                         time.sleep(1)
-                        stopliftdoor(in3,in4)
+                        stopliftdoor(in3,in4,in5,in6)
                         time.sleep(2)
-                        closeliftdoor(in3,in4)
+                        closeliftdoor(in3,in4,in5,in6)
                         time.sleep(1)
-                        stopliftdoor(in3,in4)
+                        stopliftdoor(in3,in4,in5,in6)
                         print("==== Door Opened ====")
                 elif currentFloor < destination:
                     print("==== Going up to 3rd floor ====")
@@ -263,13 +271,13 @@ def liftcode(data1):
                             print("==== Arrived ====")
                             stop(in1, in2)
                             time.sleep(1)
-                            openliftdoor(in3,in4)
+                            openliftdoor(in3,in4,in5,in6)
                             time.sleep(1)
-                            stopliftdoor(in3,in4)
+                            stopliftdoor(in3,in4,in5,in6)
                             time.sleep(2)
-                            closeliftdoor(in3,in4)
+                            closeliftdoor(in3,in4,in5,in6)
                             time.sleep(1)
-                            stopliftdoor(in3,in4)
+                            stopliftdoor(in3,in4,in5,in6)
                             print("==== Door Opened ====")
                     time.sleep(1)
                 elif currentFloor == destination:
@@ -279,13 +287,13 @@ def liftcode(data1):
                         print("==== Arrived ====")
                         stop(in1, in2)
                         time.sleep(1)
-                        openliftdoor(in3,in4)
+                        openliftdoor(in3,in4,in5,in6)
                         time.sleep(1)
-                        stopliftdoor(in3,in4)
+                        stopliftdoor(in3,in4,in5,in6)
                         time.sleep(2)
-                        closeliftdoor(in3,in4)
+                        closeliftdoor(in3,in4,in5,in6)
                         time.sleep(1)
-                        stopliftdoor(in3,in4)
+                        stopliftdoor(in3,in4,in5,in6)
                         print("==== Door Opened ====")
                 elif currentFloor > destination:
                     currentFloor -= 1
@@ -298,13 +306,13 @@ def liftcode(data1):
                             print("==== Arrived ====")
                             stop(in1, in2)
                             time.sleep(1)
-                            openliftdoor(in3,in4)
+                            openliftdoor(in3,in4,in5,in6)
                             time.sleep(1)
-                            stopliftdoor(in3,in4)
+                            stopliftdoor(in3,in4,in5,in6)
                             time.sleep(2)
-                            closeliftdoor(in3,in4)
+                            closeliftdoor(in3,in4,in5,in6)
                             time.sleep(1)
-                            stopliftdoor(in3,in4)
+                            stopliftdoor(in3,in4,in5,in6)
                             print("==== Door Opened ====")
                     time.sleep(1)
                 while GPIO.input(sensor[7]) == 0:
@@ -357,9 +365,9 @@ if __name__ == '__main__':
 
     elevatorProcess = multiprocessing.Process(target=liftcode, args=(data2,))
     elevatorProcess.start()
-    # while True:
-    #     dataVal = data1.recv()
+    while True:
+        dataVal = data1.recv()
 
-    #     pbiProcess = multiprocessing.Process(target=sendData, args=(dataVal,))
-    #     pbiProcess.start()
-    #     pbiProcess.join()
+        pbiProcess = multiprocessing.Process(target=sendData, args=(dataVal,))
+        pbiProcess.start()
+        pbiProcess.join()
