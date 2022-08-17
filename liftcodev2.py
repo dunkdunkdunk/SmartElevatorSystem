@@ -19,9 +19,11 @@ def backward(speed, in1, in2, enA):
     GPIO.output(in2, True)
 
 #stop motor function
-def stop(in1, in2):
+def stop(in1, in2,enA):
+    # enA.ChangeDutyCycle(0)
     GPIO.output(in1, True)
     GPIO.output(in2, True)
+    
 
 def openliftdoor(in3,in4,in5,in6) :
     GPIO.output(in3,True)
@@ -90,13 +92,13 @@ def liftcode(data1):
                 elif currentFloor == destination:
                     if doorIsOpened :
                         print("==== Arrived ====")
-                        time.sleep(1)
-                        openliftdoor(in3,in4,in5,in6)
-                        time.sleep(1)
-                        stopliftdoor(in3,in4,in5,in6)
                         time.sleep(2)
+                        openliftdoor(in3,in4,in5,in6)
+                        time.sleep(2)
+                        stopliftdoor(in3,in4,in5,in6)
+                        time.sleep(1.5)
                         closeliftdoor(in3,in4,in5,in6)
-                        time.sleep(1)
+                        time.sleep(2)
                         stopliftdoor(in3,in4,in5,in6)
                         print("==== Door Opened ====")
                 while GPIO.input(sensor[0]) == 0:
@@ -114,13 +116,13 @@ def liftcode(data1):
                 elif currentFloor == destination:
                     if doorIsOpened :
                         print("==== Arrived ====")
-                        time.sleep(1)
-                        openliftdoor(in3,in4,in5,in6)
-                        time.sleep(1)
-                        stopliftdoor(in3,in4,in5,in6)
                         time.sleep(2)
+                        openliftdoor(in3,in4,in5,in6)
+                        time.sleep(2)
+                        stopliftdoor(in3,in4,in5,in6)
+                        time.sleep(1.5)
                         closeliftdoor(in3,in4,in5,in6)
-                        time.sleep(1)
+                        time.sleep(2)
                         stopliftdoor(in3,in4,in5,in6)
                         print("==== Door Opened ====")
                 elif currentFloor > destination:
@@ -138,13 +140,13 @@ def liftcode(data1):
                 if currentFloor == destination:
                     if doorIsOpened :
                         print("==== Arrived ====")
-                        time.sleep(1)
-                        openliftdoor(in3,in4,in5,in6)
-                        time.sleep(1)
-                        stopliftdoor(in3,in4,in5,in6)
                         time.sleep(2)
+                        openliftdoor(in3,in4,in5,in6)
+                        time.sleep(2)
+                        stopliftdoor(in3,in4,in5,in6)
+                        time.sleep(1.5)
                         closeliftdoor(in3,in4,in5,in6)
-                        time.sleep(1)
+                        time.sleep(2)
                         stopliftdoor(in3,in4,in5,in6)
                         print("==== Door Opened ====")
                 elif currentFloor < destination:
@@ -166,13 +168,13 @@ def liftcode(data1):
                 elif currentFloor == destination:
                     if doorIsOpened :
                         print("==== Arrived ====")
-                        time.sleep(1)
-                        openliftdoor(in3,in4,in5,in6)
-                        time.sleep(1)
-                        stopliftdoor(in3,in4,in5,in6)
                         time.sleep(2)
+                        openliftdoor(in3,in4,in5,in6)
+                        time.sleep(2)
+                        stopliftdoor(in3,in4,in5,in6)
+                        time.sleep(1.5)
                         closeliftdoor(in3,in4,in5,in6)
-                        time.sleep(1)
+                        time.sleep(2)
                         stopliftdoor(in3,in4,in5,in6)
                         print("==== Door Opened ====")
                 while GPIO.input(sensor[3]) == 0:
@@ -190,13 +192,13 @@ def liftcode(data1):
                 elif currentFloor == destination:
                     if doorIsOpened :
                         print("==== Arrived ====")
-                        time.sleep(1)
-                        openliftdoor(in3,in4,in5,in6)
-                        time.sleep(1)
-                        stopliftdoor(in3,in4,in5,in6)
                         time.sleep(2)
+                        openliftdoor(in3,in4,in5,in6)
+                        time.sleep(2)
+                        stopliftdoor(in3,in4,in5,in6)
+                        time.sleep(1.5)
                         closeliftdoor(in3,in4,in5,in6)
-                        time.sleep(1)
+                        time.sleep(2)
                         stopliftdoor(in3,in4,in5,in6)
                         print("==== Door Opened ====")
                 elif currentFloor > destination:
@@ -217,13 +219,13 @@ def liftcode(data1):
                 elif currentFloor == destination:
                     if doorIsOpened :
                         print("==== Arrived ====")
-                        time.sleep(1)
-                        openliftdoor(in3,in4,in5,in6)
-                        time.sleep(1)
-                        stopliftdoor(in3,in4,in5,in6)
                         time.sleep(2)
+                        openliftdoor(in3,in4,in5,in6)
+                        time.sleep(2)
+                        stopliftdoor(in3,in4,in5,in6)
+                        time.sleep(1.5)
                         closeliftdoor(in3,in4,in5,in6)
-                        time.sleep(1)
+                        time.sleep(2)
                         stopliftdoor(in3,in4,in5,in6)
                         print("==== Door Opened ====")
                 elif currentFloor > destination:
@@ -241,13 +243,13 @@ def liftcode(data1):
                 if currentFloor == destination:
                     if doorIsOpened :
                         print("==== Arrived ====")
-                        time.sleep(1)
-                        openliftdoor(in3,in4,in5,in6)
-                        time.sleep(1)
-                        stopliftdoor(in3,in4,in5,in6)
                         time.sleep(2)
+                        openliftdoor(in3,in4,in5,in6)
+                        time.sleep(2)
+                        stopliftdoor(in3,in4,in5,in6)
+                        time.sleep(1.5)
                         closeliftdoor(in3,in4,in5,in6)
-                        time.sleep(1)
+                        time.sleep(2)
                         stopliftdoor(in3,in4,in5,in6)
                         print("==== Door Opened ====")
                 elif currentFloor < destination:
@@ -269,30 +271,30 @@ def liftcode(data1):
                         data1.send(currentFloor)
                         if doorIsOpened :
                             print("==== Arrived ====")
-                            stop(in1, in2)
-                            time.sleep(1)
-                            openliftdoor(in3,in4,in5,in6)
-                            time.sleep(1)
-                            stopliftdoor(in3,in4,in5,in6)
+                            stop(in1, in2,enA)
                             time.sleep(2)
+                            openliftdoor(in3,in4,in5,in6)
+                            time.sleep(2)
+                            stopliftdoor(in3,in4,in5,in6)
+                            time.sleep(1.5)
                             closeliftdoor(in3,in4,in5,in6)
-                            time.sleep(1)
+                            time.sleep(2)
                             stopliftdoor(in3,in4,in5,in6)
                             print("==== Door Opened ====")
-                    time.sleep(1)
+                    time.sleep(2)
                 elif currentFloor == destination:
                     data1.send(currentFloor)
                     print("=== Door Opened ===")
                     if doorIsOpened :
                         print("==== Arrived ====")
-                        stop(in1, in2)
-                        time.sleep(1)
-                        openliftdoor(in3,in4,in5,in6)
-                        time.sleep(1)
-                        stopliftdoor(in3,in4,in5,in6)
+                        stop(in1, in2,enA)
                         time.sleep(2)
+                        openliftdoor(in3,in4,in5,in6)
+                        time.sleep(2)
+                        stopliftdoor(in3,in4,in5,in6)
+                        time.sleep(1.5)
                         closeliftdoor(in3,in4,in5,in6)
-                        time.sleep(1)
+                        time.sleep(2)
                         stopliftdoor(in3,in4,in5,in6)
                         print("==== Door Opened ====")
                 elif currentFloor > destination:
@@ -304,17 +306,17 @@ def liftcode(data1):
                         data1.send(currentFloor)
                         if doorIsOpened :
                             print("==== Arrived ====")
-                            stop(in1, in2)
-                            time.sleep(1)
-                            openliftdoor(in3,in4,in5,in6)
-                            time.sleep(1)
-                            stopliftdoor(in3,in4,in5,in6)
+                            stop(in1, in2,enA)
                             time.sleep(2)
+                            openliftdoor(in3,in4,in5,in6)
+                            time.sleep(2)
+                            stopliftdoor(in3,in4,in5,in6)
+                            time.sleep(1.5)
                             closeliftdoor(in3,in4,in5,in6)
-                            time.sleep(1)
+                            time.sleep(2)
                             stopliftdoor(in3,in4,in5,in6)
                             print("==== Door Opened ====")
-                    time.sleep(1)
+                    time.sleep(2)
                 while GPIO.input(sensor[7]) == 0:
                     if GPIO.input(sensor[7]) == 1:
                         break
@@ -328,7 +330,7 @@ def liftcode(data1):
             #         print("HI")
             #         closeliftdoor(in3,in4)
             #  
-            #         time.sleep(1)
+            #         time.sleep(2)
             #     while GPIO.input(sensor[8]) == 0:
             #         if GPIO.input(sensor[8]) == 1:
             #             break

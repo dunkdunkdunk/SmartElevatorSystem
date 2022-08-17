@@ -1,63 +1,79 @@
-#!/usr/bin/env python3
-import RPi.GPIO as GPIO  # import GPIO
-from hx711 import HX711  # import the class HX711
+#! /usr/bin/python2
 
-try:
-    GPIO.setmode(GPIO.BCM)  # set GPIO pin mode to BCM numbering
-    # Create an object hx which represents your real hx711 chip
-    # Required input parameters are only 'dout_pin' and 'pd_sck_pin'
-    hx = HX711(dout_pin=8, pd_sck_pin=25)
-    # measure tare and save the value as offset for current channel
-    # and gain selected. That means channel A and gain 128
-    err = hx.zero()
-    # check if successful
-    if err:
-        raise ValueError('Tare is unsuccessful.')
+import time
+import sys
 
-    reading = hx.get_raw_data_mean()
-    if reading:  # always check if you get correct value or only False
-        # now the value is close to 0
-        print('Data subtracted by offset but still not converted to units:',
-              reading)
-    else:
-        print('invalid data', reading)
+EMULATE_HX711=False
 
-    # In order to calculate the conversion ratio to some units, in my case I want grams,
-    # you must have known weight.
-    input('Put known weight on the scale and then press Enter')
-    reading = hx.get_data_mean()
-    if reading:
-        print('Mean value from HX711 subtracted by offset:', reading)
-        known_weight_grams = input(
-            'Write how many grams it was and press Enter: ')
-        try:
-            value = float(known_weight_grams)
-            print(value, 'grams')
-        except ValueError:
-            print('Expected integer or float and I have got:',
-                  known_weight_grams)
+referenceUnit = 1
 
-        # set scale ratio for particular channel and gain which is
-        # used to calculate the conversion to units. Required argument is only
-        # scale ratio. Without arguments 'channel' and 'gain_A' it sets
-        # the ratio for current channel and gain.
-        ratio = reading / value  # calculate the ratio for channel A and gain 128
-        hx.set_scale_ratio(ratio)  # set ratio for current channel
-        print('Ratio is set.')
-    else:
-        raise ValueError('Cannot calculate mean value. Try debug mode. Variable reading:', reading)
+if not EMULATE_HX711:
+    import RPi.GPIO as GPIO
+    from hx711 import HX711
+else:
+    from emulated_hx711 import HX711
 
-    # Read data several times and return mean value
-    # subtracted by offset and converted by scale ratio to
-    # desired units. In my case in grams.
-    print("Now, I will read data in infinite loop. To exit press 'CTRL + C'")
-    input('Press Enter to begin reading')
-    print('Current weight on the scale in grams is: ')
-    while True:
-        print(hx.get_weight_mean(20), 'g')
+def cleanAndExit():
+    print("Cleaning...")
 
-except (KeyboardInterrupt, SystemExit):
-    print('Bye :)')
+    if not EMULATE_HX711:
+        GPIO.cleanup()
+        
+    print("Bye!")
+    sys.exit()
 
-finally:
-    GPIO.cleanup()
+hx = HX711(2,3)
+
+# I've found out that, for some reason, the order of the bytes is not always the same between versions of python, numpy and the hx711 itself.
+# Still need to figure out why does it change.
+# If you're experiencing super random values, change these values to MSB or LSB until to get more stable values.
+# There is some code below to debug and log the order of the bits and the bytes.
+# The first parameter is the order in which the bytes are used to build the "long" value.
+# The second paramter is the order of the bits inside each byte.
+# According to the HX711 Datasheet, the second parameter is MSB so you shouldn't need to modify it.
+hx.set_reading_format("MSB", "MSB")
+
+# HOW TO CALCULATE THE REFFERENCE UNIT
+# To set the reference unit to 1. Put 1kg on your sensor or anything you have and know exactly how much it weights.
+# In this case, 92 is 1 gram because, with 1 as a reference unit I got numbers near 0 without any weight
+# and I got numbers around 184000 when I added 2kg. So, according to the rule of thirds:
+# If 2000 grams is 184000 then 1000 grams is 184000 / 2000 = 92.
+#hx.set_reference_unit(113)
+hx.set_reference_unit(referenceUnit)
+
+hx.reset()
+
+hx.tare()
+
+print("Tare done! Add weight now...")
+
+# to use both channels, you'll need to tare them both
+#hx.tare_A()
+#hx.tare_B()
+
+while True:
+    try:
+        # These three lines are usefull to debug wether to use MSB or LSB in the reading formats
+        # for the first parameter of "hx.set_reading_format("LSB", "MSB")".
+        # Comment the two lines "val = hx.get_weight(5)" and "print val" and uncomment these three lines to see what it prints.
+        
+        # np_arr8_string = hx.get_np_arr8_string()
+        # binary_string = hx.get_binary_string()
+        # print binary_string + " " + np_arr8_string
+        
+        # Prints the weight. Comment if you're debbuging the MSB and LSB issue.
+        val = hx.get_weight(5)
+        print(val)
+
+        # To get weight from both channels (if you have load cells hooked up 
+        # to both channel A and B), do something like this
+        #val_A = hx.get_weight_A(5)
+        #val_B = hx.get_weight_B(5)
+        #print "A: %s  B: %s" % ( val_A, val_B )
+
+        hx.power_down()
+        hx.power_up()
+        time.sleep(0.1)
+
+    except (KeyboardInterrupt, SystemExit):
+        cleanAndExit()

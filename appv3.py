@@ -17,14 +17,14 @@ import RPi.GPIO as GPIO
 def cameraProcess1(data1):
     #send frame into cameraProcess2 function & timer function
     GPIO.setmode(GPIO.BCM)
-    x =
-    y =
+    x = 2
+    y = 3
     GPIO.setup(x,GPIO.IN)
     GPIO.setup(y,GPIO.IN)
 
     hx = HX711(dout_pin=x, pd_sck_pin=y)
-    hx.set_reading_format("MSB","MSB")
-    hx.set_reference_unit(referenceUnit)
+    # hx.set_reading_format("MSB","MSB")
+    # hx.set_reference_unit(referenceUnit)
     hx.reset()
     hx.tare()
     print("Tare Done!")

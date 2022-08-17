@@ -76,6 +76,7 @@ def cameraProcess2(cap, start):
         area = cv2.contourArea(con)
         unusedarea += area
     print(unusedarea)
+    # print("used",usedarea)
     if unusedarea < 40000:
         available = 0
     else:
