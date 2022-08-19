@@ -111,10 +111,10 @@ def cameraProcess2(cap, start,hx):
                 cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 1)
 
     if timeDiffer_sec >= 3:
-        return imS, available, date, mytime, processtime
+        return maskblue, available, date, mytime, processtime
 
     else:
-        return imS, -1, date, mytime, processtime
+        return maskblue, -1, date, mytime, processtime
 
 
 def sendData(data):

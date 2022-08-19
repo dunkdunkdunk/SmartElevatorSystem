@@ -14,15 +14,15 @@ def forward(speed, in1, in2, enA):
 
 #backward motor function
 def backward(speed, in1, in2, enA):
-    enA.ChangeDutyCycle(50)
+    enA.ChangeDutyCycle(speed)
     GPIO.output(in1, False)
     GPIO.output(in2, True)
 
 #stop motor function
 def stop(in1, in2,enA):
-    # enA.ChangeDutyCycle(0)
+    enA.ChangeDutyCycle(10)
     GPIO.output(in1, True)
-    GPIO.output(in2, True)
+    GPIO.output(in2, False)
     
 
 def openliftdoor(in3,in4,in5,in6) :
@@ -262,6 +262,7 @@ def liftcode(data1):
 
             elif GPIO.input(sensor[7]) == 0:
                 st8 = not st8
+                time.sleep(1)
                 if currentFloor < destination:
                     currentFloor += 1
                     print("==== Current Floor",currentFloor,"====")
