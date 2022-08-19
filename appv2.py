@@ -61,14 +61,14 @@ def cameraProcess2(cap, start):
     usedarea = 0
     numuser = 0
 
-    lower_blue = np.array([38, 10, 10])
-    upper_blue = np.array([75, 255, 255])
+    lower_green = np.array([38, 10, 10])
+    upper_green = np.array([75, 255, 255])
 
-    maskblue = cv2.inRange(hsv, lower_blue, upper_blue)
+    maskgreen = cv2.inRange(hsv, lower_green, upper_green)
 
     # find contours and get data
     contours2, _ = cv2.findContours(
-        maskblue, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+        maskgreen, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
 
     # entry line
     unusedarea = 0
@@ -86,10 +86,10 @@ def cameraProcess2(cap, start):
                 cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 1)
 
     if timeDiffer_sec >= 3:
-        return imS, available, date, mytime, processtime
+        return maskgreen, available, date, mytime, processtime
 
     else:
-        return imS, -1, date, mytime, processtime
+        return maskgreen, -1, date, mytime, processtime
 
 
 def sendData(data):

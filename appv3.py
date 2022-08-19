@@ -12,40 +12,40 @@ from datetime import datetime, timedelta
 import requests
 import time
 from hx711 import HX711  
-import RPi.GPIO as GPIO
+
+def cleanAndExit():
+    sys.exit()
 
 def cameraProcess1(data1):
     #send frame into cameraProcess2 function & timer function
-    GPIO.setmode(GPIO.BCM)
-    x = 2
-    y = 3
-    GPIO.setup(x,GPIO.IN)
-    GPIO.setup(y,GPIO.IN)
 
-    hx = HX711(dout_pin=x, pd_sck_pin=y)
-    # hx.set_reading_format("MSB","MSB")
-    # hx.set_reference_unit(referenceUnit)
-    hx.reset()
-    hx.tare()
-    print("Tare Done!")
     cap = cv2.VideoCapture(0)
+    referenceUnit = 439
+    hx = HX711(3,2)
+    hx.set_reading_format("MSB", "MSB")
 
     starttime = datetime.now()
+    hx.set_reference_unit(referenceUnit)
 
+    hx.reset()
+
+    hx.tare()
+
+    print("Tare done! Add weight now...")
     while cap.read():
 
-        val = hx.get_weight(x)
-        print(round(val),"Grams")
-
+        val = hx.get_weight(5)
+        print(val,"Gram")
         hx.power_down()
         hx.power_up()
+        time.sleep(0.1)
 
         img, available, date, mytime, finishtime = cameraProcess2(
              cap, starttime,val)
         if available >= 0:
             starttime = finishtime
             cv2.imshow('Result', img)
-            data1.send([date, mytime, available])
+            data1.send([date, mytime, available,val])
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
@@ -93,15 +93,17 @@ def cameraProcess2(cap, start,hx):
     for con in contours2:
         area = cv2.contourArea(con)
         unusedarea += area
-    
+    print(unusedarea)
     currentWeight = hx
-    if unusedarea < __ and hx > __ :
+    limitWeight = 500
+    limitArea = 30000
+    if unusedarea < limitArea and hx > limitWeight :
         available = 0
-    elif unusedarea >= __ and hx > __ :
+    elif unusedarea >= limitArea and hx > limitWeight :
         available = 0
-    elif unusedarea >= __ and hx <= __ : 
-        available = unusedarea // __
-    elif unusedarea < __ and hx <= __ :
+    elif unusedarea >= limitArea and hx <= limitWeight : 
+        available = unusedarea // limitArea
+    elif unusedarea < limitArea and hx <= limitWeight :
         available = 0
         
     # display current number of user
@@ -109,10 +111,10 @@ def cameraProcess2(cap, start,hx):
                 cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 1)
 
     if timeDiffer_sec >= 3:
-        return imS, available, date, mytime, processtime
+        return maskblue, available, date, mytime, processtime
 
     else:
-        return imS, -1, date, mytime, processtime
+        return maskblue, -1, date, mytime, processtime
 
 
 def sendData(data):
@@ -122,12 +124,12 @@ def sendData(data):
     # while True:
     data_raw = []
     for i in range(1):
-        row = [data[0], data[1], data[2]]
+        row = [data[0], data[1], data[2],data[3]]
         data_raw.append(row)
         print("Raw data - ", data_raw)
 
     # set the header record
-    HEADER = ["date", "time", "available"]
+    HEADER = ["date", "time", "available","weight"]
 
     data_df = pd.DataFrame(data_raw, columns=HEADER)
     data_json = bytes(data_df.to_json(orient='records'), encoding='utf-8')
@@ -144,9 +146,9 @@ if __name__ == '__main__':
 
     camProcess = Process(target=cameraProcess1, args=(data2,))
     camProcess.start()
-    # while True:
-    #     dataVal = data1.recv()
+    while True:
+        dataVal = data1.recv()
 
-    #     pbiProcess = Process(target=sendData, args=(dataVal,))
-    #     pbiProcess.start()
-    #     pbiProcess.join()
+        pbiProcess = Process(target=sendData, args=(dataVal,))
+        pbiProcess.start()
+        pbiProcess.join()
