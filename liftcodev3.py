@@ -91,6 +91,68 @@ def liftcode(data1):
                     time.sleep(0.2)
                     stop(in1,in2,enA)
                     backward(speed, in1, in2, enA)
+                    if GPIO.input(sensor[7]) == 0:
+                        st8 = not st8
+                        if currentFloor < destination:
+                            time.sleep(0.7)
+                            currentFloor += 1
+                            print("==== Current Floor",currentFloor,"====")
+                            data1.send(currentFloor)
+                            print("==== Passed ====")
+                            if currentFloor == destination:
+                                data1.send(currentFloor)
+                                if doorIsOpened :
+                                    print("==== Arrived ====")
+                                    stop(in1, in2,enA)
+                                    time.sleep(1)
+                                    openliftdoor(in3,in4,in5,in6)
+                                    time.sleep(1.5)
+                                    stopliftdoor(in3,in4,in5,in6)
+                                    time.sleep(5)
+                                    closeliftdoor(in3,in4,in5,in6)
+                                    time.sleep(1.5)
+                                    stopliftdoor(in3,in4,in5,in6)
+                                    print("==== Door Opened ====")
+                            time.sleep(2)
+                        elif currentFloor == destination:
+                            data1.send(currentFloor)
+                            print("=== Door Opened ===")
+                            if doorIsOpened :
+                                print("==== Arrived ====")
+                                stop(in1, in2,enA)
+                                time.sleep(1)
+                                openliftdoor(in3,in4,in5,in6)
+                                time.sleep(1.5)
+                                stopliftdoor(in3,in4,in5,in6)
+                                time.sleep(5)
+                                closeliftdoor(in3,in4,in5,in6)
+                                time.sleep(1.5)
+                                stopliftdoor(in3,in4,in5,in6)
+                                print("==== Door Opened ====")
+                        elif currentFloor > destination:
+                            currentFloor -= 1
+                            print("==== Current Floor",currentFloor,"====")
+                            data1.send(currentFloor)
+                            print("==== Passed ====")
+                            if currentFloor == destination:
+                                data1.send(currentFloor)
+                                if doorIsOpened :
+                                    print("==== Arrived ====")
+                                    stop(in1, in2,enA)
+                                    time.sleep(1)
+                                    openliftdoor(in3,in4,in5,in6)
+                                    time.sleep(1.5)
+                                    stopliftdoor(in3,in4,in5,in6)
+                                    time.sleep(5)
+                                    closeliftdoor(in3,in4,in5,in6)
+                                    time.sleep(1.5)
+                                    stopliftdoor(in3,in4,in5,in6)
+                                    print("==== Door Opened ====")
+                            time.sleep(2)
+                        while GPIO.input(sensor[7]) == 0:
+                            if GPIO.input(sensor[7]) == 1:
+                                break
+                        time.sleep(0.5)
                 elif currentFloor == destination:
                     if doorIsOpened :
                         print("==== Arrived ====")
@@ -283,77 +345,6 @@ def liftcode(data1):
                     forward(speed, in1, in2, enA)
                 while GPIO.input(sensor[6]) == 0:
                     if GPIO.input(sensor[6]) == 1:
-                        break
-                time.sleep(0.5)
-
-            elif GPIO.input(sensor[7]) == 0:
-                if currentFloor == 1 and destination == 0 :
-                    destination += 1
-                    forward(speed, in1, in2, enA)
-                    time.sleep(0.9)
-                    stop(in1, in2,enA)
-                st8 = not st8
-                if currentFloor < destination:
-                    time.sleep(0.7)
-                    currentFloor += 1
-                    print("==== Current Floor",currentFloor,"====")
-                    data1.send(currentFloor)
-                    print("==== Passed ====")
-                    if currentFloor == destination:
-                        data1.send(currentFloor)
-                        if doorIsOpened :
-                            print("==== Arrived ====")
-                            stop(in1, in2,enA)
-                            time.sleep(1)
-                            openliftdoor(in3,in4,in5,in6)
-                            time.sleep(1.5)
-                            stopliftdoor(in3,in4,in5,in6)
-                            time.sleep(5)
-                            closeliftdoor(in3,in4,in5,in6)
-                            time.sleep(1.5)
-                            stopliftdoor(in3,in4,in5,in6)
-                            print("==== Door Opened ====")
-                    time.sleep(2)
-                elif currentFloor == destination:
-                    data1.send(currentFloor)
-                    print("=== Door Opened ===")
-                    if doorIsOpened :
-                        print("==== Arrived ====")
-                        stop(in1, in2,enA)
-                        time.sleep(1)
-                        openliftdoor(in3,in4,in5,in6)
-                        time.sleep(1.5)
-                        stopliftdoor(in3,in4,in5,in6)
-                        time.sleep(5)
-                        closeliftdoor(in3,in4,in5,in6)
-                        time.sleep(1.5)
-                        stopliftdoor(in3,in4,in5,in6)
-                        print("==== Door Opened ====")
-                elif currentFloor > destination:
-                    forward(speed, in1, in2, enA)
-                    time.sleep(0.7)
-                    stop(in1, in2,enA)
-                    currentFloor -= 1
-                    print("==== Current Floor",currentFloor,"====")
-                    data1.send(currentFloor)
-                    print("==== Passed ====")
-                    if currentFloor == destination:
-                        data1.send(currentFloor)
-                        if doorIsOpened :
-                            print("==== Arrived ====")
-                            stop(in1, in2,enA)
-                            time.sleep(1)
-                            openliftdoor(in3,in4,in5,in6)
-                            time.sleep(1.5)
-                            stopliftdoor(in3,in4,in5,in6)
-                            time.sleep(5)
-                            closeliftdoor(in3,in4,in5,in6)
-                            time.sleep(1.5)
-                            stopliftdoor(in3,in4,in5,in6)
-                            print("==== Door Opened ====")
-                    time.sleep(2)
-                while GPIO.input(sensor[7]) == 0:
-                    if GPIO.input(sensor[7]) == 1:
                         break
                 time.sleep(0.5)
 
