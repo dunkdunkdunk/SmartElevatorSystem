@@ -96,7 +96,7 @@ def cameraProcess2(cap, start,hx):
     print(unusedarea)
     currentWeight = hx
     limitWeight = 500
-    limitArea = 30000
+    limitArea = 37500
     if unusedarea < limitArea and hx > limitWeight :
         available = 0
     elif unusedarea >= limitArea and hx > limitWeight :
